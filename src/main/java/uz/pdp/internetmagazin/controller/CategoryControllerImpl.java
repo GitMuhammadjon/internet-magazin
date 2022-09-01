@@ -20,14 +20,10 @@ public class CategoryControllerImpl implements CategoryController{
     }
 
     @Override
-    public List<CategoryDTO> getAll() {
+    public ApiResult getAll() {
         return categoryService.getAll();
     }
 
-    @Override
-    public CategoryDTO get(Integer id) {
-        return categoryService.get(id);
-    }
 
     @Override
     public ApiResult edit(Integer id, CategoryDTO categoryDTO) {

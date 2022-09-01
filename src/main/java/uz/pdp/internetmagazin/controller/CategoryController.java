@@ -13,10 +13,9 @@ public interface CategoryController {
     ApiResult add(@RequestBody CategoryDTO categoryDTO);
 
     @GetMapping
-    List<CategoryDTO> getAll();
+    ApiResult getAll();
 
-    @GetMapping("/{id}")
-    CategoryDTO get(@PathVariable Integer id);
+
 
     @PutMapping("/{id}")
     ApiResult edit(@PathVariable Integer id,

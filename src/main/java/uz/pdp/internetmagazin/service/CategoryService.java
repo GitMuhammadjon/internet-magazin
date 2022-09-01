@@ -8,9 +8,7 @@ import java.util.List;
 public interface CategoryService {
     ApiResult add(CategoryDTO categoryDTO);
 
-    List<CategoryDTO> getAll();
-
-    CategoryDTO get(Integer id);
+    ApiResult getAll();
 
     ApiResult edit(Integer id, CategoryDTO categoryDTO);
 

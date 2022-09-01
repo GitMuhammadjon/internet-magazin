@@ -68,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ApiResult getAll(Integer page) {
         int i = page * 20;
-        List<Map<String, Object>> maps = jdbcTemplate.queryForList("select p.id, p.name, p.price, ph.name as photo_name, ph.id as photo_id, p.category_id, c.name as category_name from product p left join category c on c.id = p.category_id left join photo ph on ph.id = p.photo_id offset ? limit 20", i);
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList("select p.id, p.name, p.price, ph.name as photo_name, ph.id as photo_id, p.category_id, c.name as category_name from product p left join category c on c.id = p.category_id left join photo ph on ph.id = p.photo_id where p.is_active = true offset ? limit 20", i);
         return new ApiResult(true, "OK", maps);
     }
 
@@ -132,16 +132,16 @@ public class ProductServiceImpl implements ProductService {
     public ApiResult filter(FilterDTO filterDTO) {
         String sql = "";
         if (filterDTO.getName() != null) {
-            sql += " where upper(p.name) like upper('%" + filterDTO.getName() + "%') ";
+            sql += " upper(p.name) like upper('%" + filterDTO.getName() + "%') ";
         }
         if (filterDTO.getPriceOT() != null && filterDTO.getPriceDO() != null) {
-            sql += (sql.length() > 0 ? " and " : " where ") + " p.price between '" + filterDTO.getPriceOT() + "' and '" + filterDTO.getPriceDO() + "' ";
+            sql +=  " and p.price between '" + filterDTO.getPriceOT() + "' and '" + filterDTO.getPriceDO() + "' ";
         }
         if (filterDTO.getCategory_id() != null) {
-            sql += (sql.length() > 0 ? " and " : " where ") + " p.category_id = " + filterDTO.getCategory_id();
+            sql += " and p.category_id = " + filterDTO.getCategory_id();
         }
 
-        List<Map<String, Object>> maps = jdbcTemplate.queryForList("select p.id, p.name, p.price, ph.name as photo_name, ph.id as photo_id, p.category_id, c.name as category_name from product p left join category c on c.id = p.category_id left join photo ph on ph.id = p.photo_id " + sql);
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList("select p.id, p.name, p.price, ph.name as photo_name, ph.id as photo_id, p.category_id, c.name as category_name from product p left join category c on c.id = p.category_id left join photo ph on ph.id = p.photo_id  where p.is_active = true " + sql);
 
 
         return new ApiResult(true,"OK", maps);

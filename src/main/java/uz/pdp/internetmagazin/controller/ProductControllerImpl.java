@@ -19,7 +19,6 @@ public class ProductControllerImpl implements ProductController {
 
     @Override
     public ApiResult add(MultipartHttpServletRequest request) throws IOException {
-        MultipartFile file = request.getFile("file");
         return productService.add(request);
     }
 
@@ -41,6 +40,6 @@ public class ProductControllerImpl implements ProductController {
 
     @Override
     public ApiResult filter(FilterDTO filterDTO) {
-        return null;
+        return productService.filter(filterDTO);
     }
 }

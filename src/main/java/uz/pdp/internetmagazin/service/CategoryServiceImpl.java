@@ -8,6 +8,7 @@ import uz.pdp.internetmagazin.payload.CategoryDTO;
 import uz.pdp.internetmagazin.repository.CategoryRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -20,34 +21,42 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public ApiResult add(CategoryDTO categoryDTO) {
+        Category category = new Category();
+        category.setName(categoryDTO.getName());
+
+        categoryRepositary.save(category);
         return new ApiResult(true,"success");
     }
 
     @Override
-    public List<CategoryDTO> getAll() {
-        return null;
+    public ApiResult getAll() {
+        List<Category> all = categoryRepositary.findAll();
+        return new ApiResult(true,"OK",all);
     }
 
-    @Override
-    public CategoryDTO get(Integer id) {
-        return null;
-    }
+
 
     @Override
     public ApiResult edit(Integer id, CategoryDTO categoryDTO) {
-        return new ApiResult(true,"success");
+        Optional<Category> byId = categoryRepositary.findById(id);
+        if(byId.isPresent()){
+            Category category = byId.get();
+            category.setName(category.getName());
+
+            categoryRepositary.save(category);
+            return new ApiResult(true,"success category");
+        }
+        return new ApiResult(false,"bunday category yoq");
     }
 
     @Override
     public ApiResult delete(Integer id) {
-        categoryRepositary.delete(categoryRepositary.findById(id).orElseThrow(IllegalStateException::new));
-        return new ApiResult(true, "success");
-    }
-
-
-    public Category categoryDTOToCategory(Category category , CategoryDTO categoryDTO){
-        category.setName(categoryDTO.getName());
-
-        return category;
+        Optional<Category> byId = categoryRepositary.findById(id);
+        if(byId.isPresent()) {
+            Category category = byId.get();
+            category.setActive(false);
+            return new ApiResult(true, "delete boldi!");
+        }
+        return new ApiResult(false, "bunday category yoq!");
     }
 }
